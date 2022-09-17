@@ -125,6 +125,7 @@ def clean_column():
     zillow2017_df['county']=value
     zillow2017_df['zipcode']=zillow2017_df['zipcode'].astype(object)
     zillow2017_df=df = zillow2017_df[zillow2017_df.columns.drop(list(zillow2017_df.filter(regex='id')))]
+    zillow2017_df['taxrate']=zillow2017_df.taxamount/zillow2017_df.taxvalue
     return zillow2017_df
 
 
