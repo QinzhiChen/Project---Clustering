@@ -124,6 +124,7 @@ def clean_column():
             value.append('Undetermined')
     zillow2017_df['county']=value
     zillow2017_df['zipcode']=zillow2017_df['zipcode'].astype(object)
+    zillow2017_df=df = zillow2017_df[zillow2017_df.columns.drop(list(zillow2017_df.filter(regex='id')))]
     return zillow2017_df
 
 
@@ -143,6 +144,7 @@ def handle_missing_values(df, prop_required_column, prop_required_row):
 
 
 def wrangle_zillow():
+    zillow_df=clean_column()
     zillow2017_df=handle_missing_values(zillow_df,.4,.5)
     train_validate, zillow_test = train_test_split(zillow2017_df, test_size=.2, random_state=123)
     zillow_train, zillow_validate = train_test_split(train_validate, test_size=.3, random_state=123)
@@ -167,13 +169,16 @@ def wrangle_zillow():
 def wrangled_file():
     zillow_train,zillow_validate,zillow_test=wrangle_zillow()
     zillow_col=zillow_train.columns.copy()
-    imp = SimpleImputer(strategy="constant")
+    imp = SimpleImputer(strategy="most_frequent")
     zillow_train=imp.fit_transform(zillow_train)
     zillow_validate=imp.fit_transform(zillow_validate)
     zillow_test=imp.fit_transform(zillow_test)
     zillow_train=pd.DataFrame(zillow_train,columns=zillow_col)
     zillow_validate=pd.DataFrame(zillow_validate,columns=zillow_col)
     zillow_test=pd.DataFrame(zillow_test,columns=zillow_col)
+    zillow_train['age']=2022.0-zillow_train.yearbuilt.astype(float)
+    zillow_validate['age']=2022.0-zillow_validate.yearbuilt.astype(float)
+    zillow_test['age']=2022.0-zillow_test.yearbuilt.astype(float)
     return zillow_train,zillow_validate,zillow_test
 
 
