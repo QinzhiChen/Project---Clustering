@@ -17,6 +17,66 @@
 
 # Data Dictionary
 
+|Feature                               |	Description                              
+|--------------------------------------|-------------------------------------------------------|
+|airconditioningtypeid                | Type of cooling system present in the home            |
+|architecturalstyletypeid.            |  Architectural style of the home (i.e. ranch, colonial, split-level, etc…)|
+|basementsqft| Finished living area below or partially below ground level|
+|bathroomcnt| Number of bathrooms in home including fractional bathrooms|
+|bedroomcnt||
+|buildingqualitytypeid|
+|buildingclasstypeid |
+|calculatedbathnbr|
+|decktypeid|
+|threequarterbathnbr|
+|finishedfloor1squarefeet|
+|calculatedfinishedsquarefeet|
+|finishedsquarefeet6|
+|finishedsquarefeet12|
+|finishedsquarefeet13|
+|finishedsquarefeet15|
+|finishedsquarefeet50|
+|fips|
+|fireplacecnt|
+|fireplaceflag|
+|fullbathcnt|
+|garagecarcnt|
+|garagetotalsqft|
+|hashottuborspa|
+|heatingorsystemtypeid|
+|latitude|
+|longitude|
+|lotsizesquarefeet|
+|numberofstories|
+|parcelid|
+|poolcnt|
+|poolsizesum|
+|pooltypeid10|
+|pooltypeid2|
+|pooltypeid7|
+|propertycountylandusecode|
+|propertylandusetypeid|
+|propertyzoningdesc|
+|rawcensustractandblock|
+|censustractandblock|
+|regionidcounty|
+|regionidcity|
+|regionidzip|
+|regionidneighborhood|
+|roomcnt|
+|storytypeid|
+|typeconstructiontypeid|
+|unitcnt|
+|yardbuildingsqft17|
+|yardbuildingsqft26|
+|yearbuilt|
+|taxvaluedollarcnt|
+|landtaxvaluedollarcnt|
+|taxamount|
+|assessmentyear|
+|taxdelinquencyflag|
+|taxdelinquencyyear|
+                                                                 |
 
 
 
@@ -37,6 +97,22 @@
 ## The plan
 
 > - We set up our initial questions during this phase. Wr made the outline of possible exploration techniques and hypothesis testing that we can use.
+
+##  Acquisition
+
+> - We obtanied Zillow data by using SQL query via MySQL database and saved the file locally as a csv. We used the code created at wrangle.py.
+
+## Preparation
+
+##  Exploration
+
+##  Modeling
+
+## Prediction delivery
+
+## Key Takeaways and Recommendations
+
+
 
 
 
