@@ -69,7 +69,6 @@
 |unitcnt|Number of units the structure is built into (i.e. 2 = duplex, 3 = triplex, etc...)|
 |yardbuildingsqft17|Patio in  yard|
 |yardbuildingsqft26|Storage shed/building in yard|
-
 |yearbuilt|The Year the principal residence was built |
 |taxvaluedollarcnt|The total tax assessed value of the parcel
 |landtaxvaluedollarcnt|The assessed value of the land area of the parcel
