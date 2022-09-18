@@ -44,7 +44,7 @@ def get_baseline(y_train,y_validate):
     RMSE_train_mean=mean_squared_error(y_train.logerror,y_train.baseline_mean, squared = False)
     RMSE_validate_mean=mean_squared_error(y_validate.logerror,y_validate.baseline_mean, squared = False)
 
-    print("RMSE using Mean on \nTrain: ", round(RMSE_train_mean,4), "\nValidate: ", round(RMSE_validate_mean,4))
+    print("RMSE using Mean on \nTrain: ", round(RMSE_train_mean,8), "\nValidate: ", round(RMSE_validate_mean,8))
     print()
 
 #calculate rmse using actual and baseline mean
@@ -96,7 +96,7 @@ def lasso_lars(X_train, y_train, X_validate, y_validate, alpha):
     # evaluate: validate rmse
     rmse_validate = mean_squared_error(y_validate.logerror, y_validate.logerror_pred_lars)**(1/2)
 
-    print("RMSE for Lasso + Lars, alpha = ", i, "\nTraining/In-Sample: ", round(rmse_train, 8), 
+    print("RMSE for Lasso + Lars, alpha = ", alpha, "\nTraining/In-Sample: ", round(rmse_train, 8), 
         "\nValidation/Out-of-Sample: ", round(rmse_validate, 8))
 
 
@@ -155,3 +155,56 @@ def polynomial_regression(X_train, y_train, X_validate, y_validate, degree):
 
     print("RMSE for Polynomial Model, degrees=", degree, "\nTraining/In-Sample: ", round(rmse_train,8), 
         "\nValidation/Out-of-Sample: ", round(rmse_validate,8))
+
+
+
+def model_performance(y_validate):
+    plt.figure(figsize=(16,8))
+    plt.xlim(-.25, .25)
+    plt.ylim(-.25, .25)
+    plt.plot(y_validate.logerror, y_validate.baseline_mean, alpha=.5, color="gray", label='_nolegend_')
+    plt.annotate("Baseline: Predict Using Mean", (0.012, 0.012 ))
+    plt.plot(y_validate.logerror, y_validate.logerror, alpha=.5, color="blue", label='_nolegend_')
+    plt.annotate("The Ideal Line: Predicted = Actual", (.10, .12), rotation=25)
+
+
+    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm2, 
+            alpha=.5, color="green", s=100, label="Model 2nd degree Polynomial")
+    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm, 
+            alpha=.5, color="red", s=100, label="Model: LinearRegression")
+    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lars, 
+            alpha=.5, color="blue", s=100, label="Model: LassoLars")
+
+
+
+    plt.legend()
+    plt.xlabel("Actual Margin of Error")
+    plt.ylabel("Predicted Margin of Error")
+    plt.title("Where are predictions more extreme? More modest?")
+    plt.show()
+
+
+
+def test_prediction(X_train,y_train,X_test,y_test,degree):
+    pf = PolynomialFeatures(degree= degree)
+    
+    # fit and transform X_train_scaled
+    X_train_degree5 = pf.fit_transform(X_train)
+    
+    X_test_degree5 = pf.transform(X_test)
+
+    # create the model object
+    lm5 = LinearRegression(normalize=True)
+
+    # fit the model to our training data. We must specify the column in y_train, 
+    # since we have converted it to a dataframe from a series! 
+    lm5.fit(X_train_degree5, y_train.logerror)
+
+     # predict test
+    y_test['logerror_pred_lm5'] = lm5.predict(X_test_degree5)
+
+    # evaluate: test rmse
+    rmse_test = mean_squared_error(y_test.logerror, y_test.logerror_pred_lm5)**(1/2)
+
+    print("RMSE for Polynomial Model, degrees=", degree, "\ntest: ", rmse_test, "\nr^2: ", explained_variance_score(y_test.logerror,
+                                           y_test.logerror_pred_lm5))
