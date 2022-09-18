@@ -32,3 +32,13 @@
 > -  You will need an env.py file that contains hostname,username and password
 > -  The env.py should also contain a function named get_db_url() that establishes the string value of the database url.
 > -  Store that env file locally in the repository.
+
+
+## The plan
+
+> - We set up our initial questions during this phase. Wr made the outline of possible exploration techniques and hypothesis testing that we can use.
+
+
+
+
+
