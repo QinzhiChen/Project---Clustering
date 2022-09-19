@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+
+
 #standard imports
 import pandas as pd
 import numpy as np
@@ -75,7 +83,7 @@ def linear_regression(X_train,y_train,X_validate,y_validate):
     # evaluate: validate rmse
     rmse_validate = mean_squared_error(y_validate.logerror, y_validate.logerror_pred_lm) ** (1/2)
 
-    print("RMSE for OLS using LinearRegression\nTraining/In-Sample", round(rmse_train, 8), 
+    print("RMSE for OLS using LinearRegression\nTraining/In-Sample", round(rmse_train, 8),
         "\nValidation/Out-of-Sample: ", round(rmse_validate, 8))
 
 
@@ -97,7 +105,7 @@ def lasso_lars(X_train, y_train, X_validate, y_validate, alpha):
     # evaluate: validate rmse
     rmse_validate = mean_squared_error(y_validate.logerror, y_validate.logerror_pred_lars)**(1/2)
 
-    print("RMSE for Lasso + Lars, alpha = ", alpha, "\nTraining/In-Sample: ", round(rmse_train, 8), 
+    print("RMSE for Lasso + Lars, alpha = ", alpha, "\nTraining/In-Sample: ", round(rmse_train, 8),
         "\nValidation/Out-of-Sample: ", round(rmse_validate, 8))
 
 
@@ -119,8 +127,8 @@ def Tweedie_regressor(X_train, y_train, X_validate, y_validate, power, alpha):
     # evaluate: validate rmse
     rmse_validate = mean_squared_error(y_validate.logerror, y_validate.logerror_pred_glm)**(1/2)
 
-    print("RMSE for GLM using Tweedie, power=", power, " & alpha=", alpha, 
-        "\nTraining/In-Sample: ", round(rmse_train, 8), 
+    print("RMSE for GLM using Tweedie, power=", power, " & alpha=", alpha,
+        "\nTraining/In-Sample: ", round(rmse_train, 8),
         "\nValidation/Out-of-Sample: ", round(rmse_validate, 8))
 
 
@@ -132,14 +140,14 @@ def polynomial_regression(X_train, y_train, X_validate, y_validate, degree):
     X_train_degree2 = pf.fit_transform(X_train)
     
 
-    # transform X_validate_scaled 
+    # transform X_validate_scaled
     X_validate_degree2 = pf.transform(X_validate)
 
     # create the model object
     lm2 = LinearRegression(normalize=True)
 
-    # fit the model to our training data. We must specify the column in y_train, 
-    # since we have converted it to a dataframe from a series! 
+    # fit the model to our training data. We must specify the column in y_train,
+    # since we have converted it to a dataframe from a series!
     lm2.fit(X_train_degree2, y_train.logerror)
 
     # predict train
@@ -154,7 +162,7 @@ def polynomial_regression(X_train, y_train, X_validate, y_validate, degree):
     # evaluate: validate rmse
     rmse_validate = mean_squared_error(y_validate.logerror, y_validate.logerror_pred_lm2)**(1/2)
 
-    print("RMSE for Polynomial Model, degrees=", degree, "\nTraining/In-Sample: ", round(rmse_train,8), 
+    print("RMSE for Polynomial Model, degrees=", degree, "\nTraining/In-Sample: ", round(rmse_train,8),
         "\nValidation/Out-of-Sample: ", round(rmse_validate,8))
 
 
@@ -169,11 +177,11 @@ def model_performance(y_validate):
     plt.annotate("The Ideal Line: Predicted = Actual", (.10, .12), rotation=25)
 
 
-    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm2, 
+    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm2,
             alpha=.5, color="green", s=100, label="Model 2nd degree Polynomial")
-    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm, 
+    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lm,
             alpha=.5, color="red", s=100, label="Model: LinearRegression")
-    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lars, 
+    plt.scatter(y_validate.logerror, y_validate.logerror_pred_lars,
             alpha=.5, color="blue", s=100, label="Model: LassoLars")
 
 
@@ -187,25 +195,15 @@ def model_performance(y_validate):
 
 
 def test_prediction(X_train,y_train,X_test,y_test,degree):
-    pf = PolynomialFeatures(degree= degree)
-    
-    # fit and transform X_train_scaled
-    X_train_degree5 = pf.fit_transform(X_train)
-    
-    X_test_degree5 = pf.transform(X_test)
-
-    # create the model object
-    lm5 = LinearRegression(normalize=True)
-
-    # fit the model to our training data. We must specify the column in y_train, 
-    # since we have converted it to a dataframe from a series! 
-    lm5.fit(X_train_degree5, y_train.logerror)
-
-     # predict test
-    y_test['logerror_pred_lm5'] = lm5.predict(X_test_degree5)
-
+   
+    lars = LassoLars(alpha=0)
+    lars.fit(X_test, y_test.logerror)
+    # fit the model to our training data. We must specify the column in y_train,
+    # since we have converted it to a dataframe from a series!
+    # predict test
+    y_test['logerror_pred_lars'] = lars.predict(X_test)
     # evaluate: test rmse
-    rmse_test = mean_squared_error(y_test.logerror, y_test.logerror_pred_lm5)**(1/2)
+    rmse_test = mean_squared_error(y_test.logerror, y_test.logerror_pred_lars)**(1/2)
 
-    print("RMSE for Polynomial Model, degrees=", degree, "\ntest: ", rmse_test, "\nr^2: ", explained_variance_score(y_test.logerror,
-                                           y_test.logerror_pred_lm5))
+    print("RMSE for Linear Regression Model,","\ntest: ", rmse_test, "\nr^2: ", explained_variance_score(y_test.logerror,
+                                           y_test.logerror_pred_lars))

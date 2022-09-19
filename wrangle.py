@@ -143,18 +143,17 @@ def handle_missing_values(df, prop_required_column, prop_required_row):
 
 # In[31]:
 
-
 def wrangle_zillow():
     zillow_df=clean_column()
     zillow2017_df=handle_missing_values(zillow_df,.4,.5)
     train_validate, zillow_test = train_test_split(zillow2017_df, test_size=.2, random_state=123)
     zillow_train, zillow_validate = train_test_split(train_validate, test_size=.3, random_state=123)
     zillow_train['month']=pd.DatetimeIndex(zillow_train['transactiondate']).month
-    zillow_train=zillow_train.drop(columns=['transactiondate'])
+    zillow_train=zillow_train.drop(columns=['transactiondate','heatingorsystemdesc','unitcnt','propertyzoningdesc','lots'])
     zillow_validate['month']=pd.DatetimeIndex(zillow_validate['transactiondate']).month
-    zillow_validate=zillow_validate.drop(columns=['transactiondate'])
+    zillow_validate=zillow_validate.drop(columns=['transactiondate','heatingorsystemdesc','unitcnt','propertyzoningdesc','lots'])
     zillow_test['month']=pd.DatetimeIndex(zillow_test['transactiondate']).month
-    zillow_test=zillow_test.drop(columns=['transactiondate'])
+    zillow_test=zillow_test.drop(columns=['transactiondate','heatingorsystemdesc','unitcnt','propertyzoningdesc','lots'])
     return zillow_train, zillow_validate, zillow_test
 
 
@@ -166,22 +165,38 @@ def wrangle_zillow():
 
 # In[33]:
 
+
 def wrangled_file():
     zillow_train,zillow_validate,zillow_test=wrangle_zillow()
-    zillow_col=zillow_train.columns.copy()
-    zillow_train=zillow_train.dropna()
-    zillow_validate=zillow_validate.dropna()
-    zillow_test=zillow_test.dropna()
-    zillow_train=pd.DataFrame(zillow_train,columns=zillow_col)
-    zillow_validate=pd.DataFrame(zillow_validate,columns=zillow_col)
-    zillow_test=pd.DataFrame(zillow_test,columns=zillow_col)
-    zillow_train['age']=2022.0-zillow_train.yearbuilt.astype(float)
-    zillow_validate['age']=2022.0-zillow_validate.yearbuilt.astype(float)
-    zillow_test['age']=2022.0-zillow_test.yearbuilt.astype(float)
+    zillow_train=zillow_train.dropna(axis=0)
+    zillow_validate=zillow_validate.dropna(axis=0)
+    zillow_test=zillow_test.dropna(axis=0)
+    zillow_train['age']=2022.0-zillow_train.yearbuilt
+    zillow_validate['age']=2022.0-zillow_validate.yearbuilt
+    zillow_test['age']=2022.0-zillow_test.yearbuilt
     return zillow_train,zillow_validate,zillow_test
 
 
 # In[ ]:
+def scale_data(zillow_train,zillow_validate,zillow_test,cols):
+    #make the scaler
+    scaler = RobustScaler()
+    #fit the scaler at train data only
+    scaler.fit(zillow_train[cols])
+    #tranforrm train, validate and test
+    zillow_train_scaled = scaler.transform(zillow_train[cols])
+    zillow_validate_scaled = scaler.transform(zillow_validate[cols])
+    zillow_test_scaled = scaler.transform(zillow_test[cols])
+    
+    # Generate a list of the new column names with _scaled added on
+    scaled_columns = [col+"_scaled" for col in cols]
+    
+    #concatenate with orginal train, validate and test
+    scaled_train = pd.concat([zillow_train.reset_index(drop = True),pd.DataFrame(zillow_train_scaled,columns = scaled_columns)],axis = 1)
+    scaled_validate = pd.concat([zillow_validate.reset_index(drop = True),pd.DataFrame(zillow_validate_scaled, columns = scaled_columns)], axis = 1)
+    scaled_test= pd.concat([zillow_test.reset_index(drop = True),pd.DataFrame(zillow_test_scaled,columns = scaled_columns)],axis = 1)
+    
+    return scaled_train,scaled_validate,scaled_test
 
 
 
