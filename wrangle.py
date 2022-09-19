@@ -166,14 +166,12 @@ def wrangle_zillow():
 
 # In[33]:
 
-
 def wrangled_file():
     zillow_train,zillow_validate,zillow_test=wrangle_zillow()
     zillow_col=zillow_train.columns.copy()
-    imp = SimpleImputer(strategy="most_frequent")
-    zillow_train=imp.fit_transform(zillow_train)
-    zillow_validate=imp.fit_transform(zillow_validate)
-    zillow_test=imp.fit_transform(zillow_test)
+    zillow_train=zillow_train.dropna()
+    zillow_validate=zillow_validate.dropna()
+    zillow_test=zillow_test.dropna()
     zillow_train=pd.DataFrame(zillow_train,columns=zillow_col)
     zillow_validate=pd.DataFrame(zillow_validate,columns=zillow_col)
     zillow_test=pd.DataFrame(zillow_test,columns=zillow_col)

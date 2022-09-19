@@ -9,6 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 from sklearn.feature_selection import SelectKBest, RFE, f_regression, SequentialFeatureSelector
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, QuantileTransformer
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LinearRegression,LassoLars,TweedieRegressor
 from sklearn.preprocessing import PolynomialFeatures
@@ -19,7 +20,7 @@ from sklearn.metrics import mean_squared_error,explained_variance_score
 
 def scale_data(zillow_train,zillow_validate,zillow_test,cols):
     #make the scaler
-    scaler = MinMaxScaler()
+    scaler = RobustScaler()
     #fit the scaler at train data only
     scaler.fit(zillow_train[cols])
     #tranforrm train, validate and test
