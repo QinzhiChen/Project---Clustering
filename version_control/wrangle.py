@@ -143,19 +143,8 @@ def handle_missing_values(df, prop_required_column, prop_required_row):
 
 # In[31]:
 
-def remove_outlier():
-    zillow2017_df=clean_column()
-    zillow2017_df = zillow2017_df[(zillow2017_df.bathroom < 7)&(zillow2017_df.bedroom < 9)&(zillow2017_df.taxrate < .20)&(zillow2017_df.sqtft < 4000)]
-    return zillow2017_df
-
-
-
-
-# In[ ]:
-
-
 def wrangle_zillow():
-    zillow_df=remove_outlier()
+    zillow_df=clean_column()
     zillow2017_df=handle_missing_values(zillow_df,.4,.5)
     train_validate, zillow_test = train_test_split(zillow2017_df, test_size=.2, random_state=123)
     zillow_train, zillow_validate = train_test_split(train_validate, test_size=.3, random_state=123)
@@ -166,6 +155,13 @@ def wrangle_zillow():
     zillow_test['month']=pd.DatetimeIndex(zillow_test['transactiondate']).month
     zillow_test=zillow_test.drop(columns=['transactiondate','heatingorsystemdesc','unitcnt','propertyzoningdesc','lots'])
     return zillow_train, zillow_validate, zillow_test
+
+
+# In[ ]:
+
+
+
+
 
 # In[33]:
 
@@ -184,7 +180,7 @@ def wrangled_file():
 # In[ ]:
 def scale_data(zillow_train,zillow_validate,zillow_test,cols):
     #make the scaler
-    scaler = MinMaxScaler()
+    scaler = RobustScaler()
     #fit the scaler at train data only
     scaler.fit(zillow_train[cols])
     #tranforrm train, validate and test
@@ -199,6 +195,7 @@ def scale_data(zillow_train,zillow_validate,zillow_test,cols):
     scaled_train = pd.concat([zillow_train.reset_index(drop = True),pd.DataFrame(zillow_train_scaled,columns = scaled_columns)],axis = 1)
     scaled_validate = pd.concat([zillow_validate.reset_index(drop = True),pd.DataFrame(zillow_validate_scaled, columns = scaled_columns)], axis = 1)
     scaled_test= pd.concat([zillow_test.reset_index(drop = True),pd.DataFrame(zillow_test_scaled,columns = scaled_columns)],axis = 1)
+    
     return scaled_train,scaled_validate,scaled_test
 
 

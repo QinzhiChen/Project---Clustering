@@ -1,4 +1,4 @@
-# Predicting Logerror in Zillow data
+# Project---Clustering
 
 # Project Goal
 > - The goal of this project was to identify factors affecting errors in the Zestimate used by Zillow to estimate single family home prices in 2017. The results of this project will be used to improve the model used to estimate prices and guide future data collection efforts
@@ -19,30 +19,74 @@
 
 |Feature                               |	Description                              
 |--------------------------------------|-------------------------------------------------------|
-|logerror|The difference in log of Zestimate and log of sales price|
+|airconditioningtypeid                | Type of cooling system present in the home            |
+|architecturalstyletypeid.            |  Architectural style of the home (i.e. ranch, colonial, split-level, etc…)|
+|basementsqft| Finished living area below or partially below ground level|
 |bathroomcnt| Number of bathrooms in home including fractional bathrooms|
 |bedroomcnt|Number of bedrooms in home |
+|buildingqualitytypeid|Number of bedrooms in home |
+|buildingclasstypeid | Overall assessment of condition of the building from best (lowest) to worst (highest)|
 |calculatedbathnbr| Number of bathrooms in home including fractional bathroom|
+|decktypeid|Type of deck (if any) present on parcel|
+|threequarterbathnbr| Number of 3/4 bathrooms in house (shower + sink + toilet)|
+|finishedfloor1squarefeet|  Size of the finished living area on the first (entry) floor of the home|
+|calculatedfinishedsquarefeet| Calculated total finished living area of the home |
+|finishedsquarefeet6|Base unfinished and finished area|
 |finishedsquarefeet12|Finished living area|
+|finishedsquarefeet13|Perimeter  living area|
+|finishedsquarefeet15|Total area|
+|finishedsquarefeet50| Size of the finished living area on the first (entry) floor of the home|
 |fips| Federal Information Processing Standard code|
+|fireplacecnt| Number of fireplaces in a home (if any)|
+|fireplaceflag| Is a fireplace present in this home |
 |fullbathcnt| Number of full bathrooms (sink, shower + bathtub, and toilet) present in home|
+|garagecarcnt| Total number of garages on the lot including an attached garage|
+|garagetotalsqft| Total number of square feet of all garages on lot including an attached garage|
+|hashottuborspa| Does the home have a hot tub or spa|
+|heatingorsystemtypeid| Type of home heating system|
 |latitude| Latitude of the middle of the parcel multiplied by 10e6|
 |longitude| Longitude of the middle of the parcel multiplied by 10e6|
+|lotsizesquarefeet| Area of the lot in square feet|
+|numberofstories| Number of stories or levels the home has|
+|parcelid| Unique identifier for parcels (lots) |
+|poolcnt| Number of pools on the lot (if any)|
+|poolsizesum| Total square footage of all pools on property|
+|pooltypeid10| Spa or Hot Tub|
+|pooltypeid2| Pool with Spa/Hot Tub|
+|pooltypeid7| Pool without hot tub|
 |propertycountylandusecode| County land use code i.e. it's zoning at the county level|
+|propertylandusetypeid| Type of land use the property is zoned for|
+|propertyzoningdesc| Description of the allowed land uses (zoning) for that property|
 |rawcensustractandblock| Census tract and block ID combined - also contains blockgroup assignment by extension|
 |censustractandblock| Census tract and block ID combined - also contains blockgroup assignment by extension|
+|regionidcounty|County in which the property is located|
+|regionidcity| City in which the property is located (if any)|
+|regionidzip| Zip code in which the property is located|
+|regionidneighborhood|Neighborhood in which the property is located|
 |roomcnt| Total number of rooms in the principal residence|
+|storytypeid| Type of floors in a multi-story house (i.e. basement and main level, split-level, attic|
+|typeconstructiontypeid| What type of construction material was used to construct the home|
+|unitcnt|Number of units the structure is built into (i.e. 2 = duplex, 3 = triplex, etc...)|
+|yardbuildingsqft17|Patio in  yard|
+|yardbuildingsqft26|Storage shed/building in yard|
 |yearbuilt|The Year the principal residence was built |
-|taxvaluedollarcnt|The total tax assessed value of the parcel|
+|taxvaluedollarcnt|The total tax assessed value of the parcel
 |landtaxvaluedollarcnt|The assessed value of the land area of the parcel
 |taxamount|The total property tax assessed for that assessment year|
 |assessmentyear|The year of the property tax assessment |
-|calculatedfinishedsquarefeet| Calculated total finished living area of the home |
-|regionidzip| Zip code in which the property is located|
-|structuretaxvaluedollarcnt|	The assessed value of the built structure on the parcel|
-|propertyzoningdesc| Description of the allowed land uses (zoning) for that property|
-
+|taxdelinquencyflag|Property taxes for this parcel are past due as of 2015|
+|taxdelinquencyyear|Year for which the unpaid propert taxes were due |
    
+   
+ 
+
+
+
+
+
+
+
+
 ## Steps to Reproduce
 
 > -  To clone this repo, use this command in your terminal https://github.com/QinzhiChen/Project---Clustering
@@ -62,36 +106,13 @@
 
 ## Preparation
 
-A total of 77380 rows and 68 columns were retrieved.
-These are the steps taken for data clean up and split
-> - feature engineered taxrate where taxrate = taxamount/taxvalue
-> - feature engineered age column, age = present year - year built
-> - renamed columns (bedroomcnt':'bedroom','bathroomcnt':'bathroom','calculatedfinishedsquarefeet':'sqtft', 'taxvaluedollarcnt':'taxvalue','garagecarcnt':'garage','lotsizesquarefeet':'lots','poolcnt':'pool','regionidzip':'zipcode')
-> - nulls: removed columns with more than 40% nulls and rows with more than 50% nulls.
-> - nulls: dropped all other remaining null
-> - created a new column called county with county names corresponding to the fips.
->- created a new column called month corresponding to the month in column transactiondate
-> - dropped columns: transactiondate,heatingorsystemdesc,unitcnt,propertyzoningdesc,lots
-> - outliers: dropped bathroom count over 5, bedroom count over 8, tax rate over 0.20 and sqtft over 4000
-
- Finally, split data into train (56%), validate (24%), test(20%)
-
-
 ##  Exploration
-
-We conducted an initial exploration of the data by examining correlations between each of the potential features and the target. We also explored further by using K-means clustering to see relationship of our features with the target
 
 ##  Modeling
 
-We scaled our top features using MinMaxScaler. We used RMSE using mean for the baseline and used Linear Regression(OLS), Lassor + Lars, General Linear Regression(Tweedier Regressor) and Polynomial Regression to evalute our model. Our top performing model was ............
-
 ## Prediction delivery
 
-Using our top model, we able to predict the logerror on our data.
-
 ## Key Takeaways and Recommendations
-
-All models performed better than the baseline, even if not by much. We do not recommend to use this model. Also we recommend that we need better data. Roughly half of all features are lost due to missing too many values which reduces the number of potential drivers of logerror we could analyze. Clustering was shown to be a useful exercise, so additional clustering exploration is recommended in an attempt to find clusters that serve as larger drivers.
 
 
 
