@@ -39,11 +39,8 @@ def get_connection(db, user=env.user, host=env.host, password=env.password):
 def acquire_zillow():
     file='zillow_df.csv'
     if os.path.isfile(file):
-        print("pulling locally")
         return pd.read_csv(file)
-        
     else:
-        print("pull from sql")
         zillow2017_df = pd.read_sql(('''SELECT
     prop.*,
     predictions_2017.logerror,
@@ -55,24 +52,24 @@ def acquire_zillow():
     landuse.propertylandusedesc,
     story.storydesc,
     construct.typeconstructiondesc
-    FROM properties_2017 prop
-    JOIN (
+FROM properties_2017 prop
+JOIN (
     SELECT parcelid, MAX(transactiondate) max_transactiondate
     FROM predictions_2017
     GROUP BY parcelid
-    ) pred USING(parcelid)
-    JOIN predictions_2017 ON pred.parcelid = predictions_2017.parcelid
+) pred USING(parcelid)
+JOIN predictions_2017 ON pred.parcelid = predictions_2017.parcelid
                       AND pred.max_transactiondate = predictions_2017.transactiondate
-    LEFT JOIN airconditioningtype air USING (airconditioningtypeid)
-    LEFT JOIN architecturalstyletype arch USING (architecturalstyletypeid)
-    LEFT JOIN buildingclasstype build USING (buildingclasstypeid)
-    LEFT JOIN heatingorsystemtype heat USING (heatingorsystemtypeid)
-    LEFT JOIN propertylandusetype landuse USING (propertylandusetypeid)
-    LEFT JOIN storytype story USING (storytypeid)
-    LEFT JOIN typeconstructiontype construct USING (typeconstructiontypeid)
-    WHERE prop.latitude IS NOT NULL
-    AND prop.longitude IS NOT NULL
-    AND predictions_2017.transactiondate like "2017%%" '''), get_connection('zillow'))
+LEFT JOIN airconditioningtype air USING (airconditioningtypeid)
+LEFT JOIN architecturalstyletype arch USING (architecturalstyletypeid)
+LEFT JOIN buildingclasstype build USING (buildingclasstypeid)
+LEFT JOIN heatingorsystemtype heat USING (heatingorsystemtypeid)
+LEFT JOIN propertylandusetype landuse USING (propertylandusetypeid)
+LEFT JOIN storytype story USING (storytypeid)
+LEFT JOIN typeconstructiontype construct USING (typeconstructiontypeid)
+WHERE prop.latitude IS NOT NULL
+  AND prop.longitude IS NOT NULL
+  AND predictions_2017.transactiondate like "2017%%" '''), get_connection('zillow'))
         zillow2017_df.to_csv(file,index=False)
     return zillow2017_df
 
@@ -146,8 +143,19 @@ def handle_missing_values(df, prop_required_column, prop_required_row):
 
 # In[31]:
 
+def remove_outlier():
+    zillow2017_df=clean_column()
+    zillow2017_df = zillow2017_df[(zillow2017_df.bathroom < 7)&(zillow2017_df.bedroom < 9)&(zillow2017_df.taxrate < .20)&(zillow2017_df.sqtft < 4000)]
+    return zillow2017_df
+
+
+
+
+# In[ ]:
+
+
 def wrangle_zillow():
-    zillow_df=clean_column()
+    zillow_df=remove_outlier()
     zillow2017_df=handle_missing_values(zillow_df,.4,.5)
     train_validate, zillow_test = train_test_split(zillow2017_df, test_size=.2, random_state=123)
     zillow_train, zillow_validate = train_test_split(train_validate, test_size=.3, random_state=123)
@@ -158,13 +166,6 @@ def wrangle_zillow():
     zillow_test['month']=pd.DatetimeIndex(zillow_test['transactiondate']).month
     zillow_test=zillow_test.drop(columns=['transactiondate','heatingorsystemdesc','unitcnt','propertyzoningdesc','lots'])
     return zillow_train, zillow_validate, zillow_test
-
-
-# In[ ]:
-
-
-
-
 
 # In[33]:
 
@@ -183,7 +184,7 @@ def wrangled_file():
 # In[ ]:
 def scale_data(zillow_train,zillow_validate,zillow_test,cols):
     #make the scaler
-    scaler = RobustScaler()
+    scaler = MinMaxScaler()
     #fit the scaler at train data only
     scaler.fit(zillow_train[cols])
     #tranforrm train, validate and test
@@ -198,7 +199,6 @@ def scale_data(zillow_train,zillow_validate,zillow_test,cols):
     scaled_train = pd.concat([zillow_train.reset_index(drop = True),pd.DataFrame(zillow_train_scaled,columns = scaled_columns)],axis = 1)
     scaled_validate = pd.concat([zillow_validate.reset_index(drop = True),pd.DataFrame(zillow_validate_scaled, columns = scaled_columns)], axis = 1)
     scaled_test= pd.concat([zillow_test.reset_index(drop = True),pd.DataFrame(zillow_test_scaled,columns = scaled_columns)],axis = 1)
-    
     return scaled_train,scaled_validate,scaled_test
 
 

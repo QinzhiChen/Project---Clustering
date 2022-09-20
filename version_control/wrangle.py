@@ -39,11 +39,8 @@ def get_connection(db, user=env.user, host=env.host, password=env.password):
 def acquire_zillow():
     file='zillow_df.csv'
     if os.path.isfile(file):
-        print("pulling locally")
         return pd.read_csv(file)
-        
     else:
-        print("pull from sql")
         zillow2017_df = pd.read_sql(('''SELECT
     prop.*,
     predictions_2017.logerror,
@@ -55,24 +52,24 @@ def acquire_zillow():
     landuse.propertylandusedesc,
     story.storydesc,
     construct.typeconstructiondesc
-    FROM properties_2017 prop
-    JOIN (
+FROM properties_2017 prop
+JOIN (
     SELECT parcelid, MAX(transactiondate) max_transactiondate
     FROM predictions_2017
     GROUP BY parcelid
-    ) pred USING(parcelid)
-    JOIN predictions_2017 ON pred.parcelid = predictions_2017.parcelid
+) pred USING(parcelid)
+JOIN predictions_2017 ON pred.parcelid = predictions_2017.parcelid
                       AND pred.max_transactiondate = predictions_2017.transactiondate
-    LEFT JOIN airconditioningtype air USING (airconditioningtypeid)
-    LEFT JOIN architecturalstyletype arch USING (architecturalstyletypeid)
-    LEFT JOIN buildingclasstype build USING (buildingclasstypeid)
-    LEFT JOIN heatingorsystemtype heat USING (heatingorsystemtypeid)
-    LEFT JOIN propertylandusetype landuse USING (propertylandusetypeid)
-    LEFT JOIN storytype story USING (storytypeid)
-    LEFT JOIN typeconstructiontype construct USING (typeconstructiontypeid)
-    WHERE prop.latitude IS NOT NULL
-    AND prop.longitude IS NOT NULL
-    AND predictions_2017.transactiondate like "2017%%" '''), get_connection('zillow'))
+LEFT JOIN airconditioningtype air USING (airconditioningtypeid)
+LEFT JOIN architecturalstyletype arch USING (architecturalstyletypeid)
+LEFT JOIN buildingclasstype build USING (buildingclasstypeid)
+LEFT JOIN heatingorsystemtype heat USING (heatingorsystemtypeid)
+LEFT JOIN propertylandusetype landuse USING (propertylandusetypeid)
+LEFT JOIN storytype story USING (storytypeid)
+LEFT JOIN typeconstructiontype construct USING (typeconstructiontypeid)
+WHERE prop.latitude IS NOT NULL
+  AND prop.longitude IS NOT NULL
+  AND predictions_2017.transactiondate like "2017%%" '''), get_connection('zillow'))
         zillow2017_df.to_csv(file,index=False)
     return zillow2017_df
 
