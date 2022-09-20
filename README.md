@@ -9,10 +9,10 @@
 
 
 # Initial Questions
-> - Is there relationship between LogError and Age?
-> - Is there relationship between taxrate and logerror?
-> - Is there a significant different between logerror and the bathroom and bedroom counts?
-> - Can we achieve lower logerror when seperate orange county out of overall?
+> - Whether there are correlation between sqtft and logerror
+> - Whether the bedroom, bathroom, and logerror have significant relationship
+> - whether the county has similar logerror
+> - Whether the logerror and age could have significant group
 
 
 # Data Dictionary
@@ -89,7 +89,7 @@ A total of 77380 rows and 68 columns were retrieved.
 
 ##  Modeling
 
-We scaled our top features using MinMaxScaler. We used RMSE using mean for the baseline and used Linear Regression(OLS), Lassor + Lars, General Linear Regression(Tweedier Regressor) and Polynomial Regression to evalute our model. Our top performing model was ............
+We scaled our top features using MinMaxScaler. We used RMSE using mean for the baseline and used Linear Regression(OLS),kbest, Lassor + Lars, General Linear Regression(Tweedier Regressor) and Polynomial Regression to evalute our model. The modeling we selected is the polynominal modeling with two degree, which achieved 0.15748 RMSE and .02091 Rsquare.
 
 ## Prediction delivery
 
