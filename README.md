@@ -82,11 +82,6 @@
 
 
 
-
-
-
-
-
 ## Steps to Reproduce
 
 > -  To clone this repo, use this command in your terminal https://github.com/QinzhiChen/Project---Clustering
@@ -105,6 +100,20 @@
 > - We obtanied Zillow data by using SQL query via MySQL database and saved the file locally as a csv. We used the code created at wrangle.py.
 
 ## Preparation
+
+A total of 77380 rows and 68 columns were retrieved.
+These are the steps taken for data clean up and split
+> - feature engineered taxrate where taxrate = taxamount/taxvalue
+> - feature engineered age column, age = present year - year built
+> - renamed columns (bedroomcnt':'bedroom','bathroomcnt':'bathroom','calculatedfinishedsquarefeet':'sqtft', 'taxvaluedollarcnt':'taxvalue','garagecarcnt':'garage','lotsizesquarefeet':'lots','poolcnt':'pool','regionidzip':'zipcode')
+> - nulls: removed columns with more than 40% nulls and rows with more than 50% nulls.
+> - nulls: dropped all other remaining null
+> - assigned county names to fips
+> - dropped columns: transactiondate,heatingorsystemdesc,unitcnt,propertyzoningdesc,lots
+> - outliers: dropped bathroom count over 5, bedroom count over 8, tax rate over 0.20 and sqtft over 4000
+
+ Finally, split data into train (56%), validate (24%), test(20%)
+
 
 ##  Exploration
 
