@@ -83,7 +83,11 @@ These are the steps taken for data clean up and split
 
 ## Prediction delivery
 
+Using our top model, we able to predict the logerror on our data.
+
 ## Key Takeaways and Recommendations
+
+All models performed better than the baseline, even if not by much. We do not recommend to use this model. Also we recommend that we need better data. Roughly half of all features are lost due to missing too many values which reduces the number of potential drivers of logerror we could analyze.
 
 
 
