@@ -79,7 +79,11 @@ These are the steps taken for data clean up and split
 
 ##  Exploration
 
+We conducted an initial exploration of the data by examining correlations between each of the potential features and the target. We also explored further by using K-means clustering to see relationship of our features with the target
+
 ##  Modeling
+
+We scaled our top features using MinMaxScaler. We used RMSE using mean for the baseline and used Linear Regression(OLS), Lassor + Lars, General Linear Regression(Tweedier Regressor) and Polynomial Regression to evalute our model. Our top performing model was ............
 
 ## Prediction delivery
 
@@ -87,7 +91,7 @@ Using our top model, we able to predict the logerror on our data.
 
 ## Key Takeaways and Recommendations
 
-All models performed better than the baseline, even if not by much. We do not recommend to use this model. Also we recommend that we need better data. Roughly half of all features are lost due to missing too many values which reduces the number of potential drivers of logerror we could analyze.
+All models performed better than the baseline, even if not by much. We do not recommend to use this model. Also we recommend that we need better data. Roughly half of all features are lost due to missing too many values which reduces the number of potential drivers of logerror we could analyze. Clustering was shown to be a useful exercise, so additional clustering exploration is recommended in an attempt to find clusters that serve as larger drivers.
 
 
 
