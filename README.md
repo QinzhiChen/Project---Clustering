@@ -1,4 +1,4 @@
-# Project---Clustering
+# Predicting Logerror in Zillow data
 
 # Project Goal
 > - The goal of this project was to identify factors affecting errors in the Zestimate used by Zillow to estimate single family home prices in 2017. The results of this project will be used to improve the model used to estimate prices and guide future data collection efforts
